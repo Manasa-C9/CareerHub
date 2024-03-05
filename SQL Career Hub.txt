@@ -1,0 +1,314 @@
+SQL CareerHub queries
+
+1. Provide a SQL script that initializes the database for the Job Board scenario “CareerHub”.
+A.create database CareerHub;
+
+2. Create tables for Companies, Jobs, Applicants and Applications.
+
+Companies:
+Create table Companies (CompanyID int primary key,CompanyName varchar(255),Location varchar(255));
+
+insert into Companies (CompanyID, CompanyName, Location)
+values 
+    (1, 'Hexaware', 'Chennai'),
+    (2, 'CoMakeIt', 'Los Angeles'),
+    (3, 'Tech Solutions', 'USA'),
+    (4, 'Global Innovations', 'London');
++-----------+--------------------+-------------+
+| CompanyID | CompanyName        | Location    |
++-----------+--------------------+-------------+
+|         1 | Hexaware           | Chennai     |
+|         2 | CoMakeIt           | Los Angeles |
+|         3 | Tech Solutions     | USA         |
+|         4 | Global Innovations | London      |
++-----------+--------------------+-------------+
+
+Jobs:
+Create table Jobs (JobID int primary key,CompanyID int,JobTitle varchar(255),
+JobDescription varchar(1000),JobLocation varchar(255),Salary decimal(10,2),
+JobType varchar(255),PostedDate datetime,foreign key (CompanyID)
+references Companies(CompanyID));
+
+insert into Jobs (JobID, CompanyID, JobTitle, JobDescription, JobLocation, Salary, JobType, PostedDate)
+values
+    (101, 1, 'Software Engineer', 'Developing software applications', 'Chennai', 75000.00, 'Full-time', '2024-03-03 08:00:00'),
+    (102, 1, 'Marketing Manager', 'Creating and implementing marketing strategies', 'Chennai', 60000.00, 'Full-time', '2024-03-02 09:00:00'),
+    (103, 2, 'Data Analyst', 'Analyzing data and generating reports', 'Los Angeles', 70000.00, 'Part-time', '2024-03-01 10:00:00'),
+    (104, 3, 'Web Developer', 'Building responsive web applications', 'USA', 80000.00, 'Full-time', '2024-03-04 11:00:00');
++-------+-----------+-------------------+------------------------------------------------+-------------+----------+-----------+---------------------+
+| JobID | CompanyID | JobTitle          | JobDescription                                 | JobLocation | Salary   | JobType   | PostedDate          |
++-------+-----------+-------------------+------------------------------------------------+-------------+----------+-----------+---------------------+
+|   101 |         1 | Software Engineer | Developing software applications               | Chennai     | 75000.00 | Full-time | 2024-03-03 08:00:00 |
+|   102 |         1 | Marketing Manager | Creating and implementing marketing strategies | Chennai     | 60000.00 | Full-time | 2024-03-02 09:00:00 |
+|   103 |         2 | Data Analyst      | Analyzing data and generating reports          | Los Angeles | 70000.00 | Part-time | 2024-03-01 10:00:00 |
+|   104 |         3 | Web Developer     | Building responsive web applications           | USA         | 80000.00 | Full-time | 2024-03-04 11:00:00 |
++-------+-----------+-------------------+------------------------------------------------+-------------+----------+-----------+---------------------+
+
+Applicants:
+Create table Applicants(ApplicantID int primary key,FirstName varchar(255)
+,LastName varchar(255),Email varchar(255),Phone varchar(255),
+Resume text,Experience int);
+
+insert into Applicants (ApplicantID, FirstName, LastName, Email, Phone, Resume)
+values
+    (201, 'John', 'Doe', 'john23@gmail.com', '9391058224', 'Sample resume text'),
+    (202, 'Jane', 'Smith', 'jane33@gmail.com', '8121411037', 'Sample resume text'),
+    (203, 'Michael', 'Johnson', 'michael78@gmail.com.com', '9182191569', 'Sample resume text'),
+    (204, 'Emily', 'Williams', 'emily34@gmail.com', '9182345113', 'Sample resume text');
+
++-------------+-----------+----------+-------------------------+------------+--------------------+------------+
+| ApplicantID | FirstName | LastName | Email                   | Phone      | Resume             | Experience |
++-------------+-----------+----------+-------------------------+------------+--------------------+------------+
+|         201 | John      | Doe      | john23@gmail.com        | 9391058224 | Sample resume text |          3 |
+|         202 | Jane      | Smith    | jane33@gmail.com        | 8121411037 | Sample resume text |          2 |
+|         203 | Michael   | Johnson  | michael78@gmail.com.com | 9182191569 | Sample resume text |          4 |
+|         204 | Emily     | Williams | emily34@gmail.com       | 9182345113 | Sample resume text |          1 |
++-------------+-----------+----------+-------------------------+------------+--------------------+------------+
+
+Applications:
+
+Create table Applications(ApplicationID int primary key,JobID int,ApplicantID int,
+ApplicationDate date,CoverLetter text ,foreign key(JobID) references
+Jobs(JobID) , foreign key(ApplicantID) references Applicants(ApplicantID));
+
+ insert into Applications (ApplicationID, JobID, ApplicantID, ApplicationDate, CoverLetter)
+values
+    (301, 101, 201, '2024-03-03', 'This is my cover letter for the software engineer position'),
+    (302, 102, 202, '2024-03-02', 'This is my cover letter for the marketing manager position'),
+    (303, 101, 201, '2024-03-01', 'This is my cover letter for the software engineer position'),
+    (304, 104, 204, '2024-03-04', 'This is my cover letter for the web developer position');
+
++---------------+-------+-------------+-----------------+-------------------------------------------------------------+
+| ApplicationID | JobID | ApplicantID | ApplicationDate | CoverLetter                                                 |
++---------------+-------+-------------+-----------------+-------------------------------------------------------------+
+|           301 |   101 |         201 | 2024-03-03      | This is my cover letter for the software engineer position  |
+|           302 |   102 |         202 | 2024-03-02      | This is my cover letter for the marketing manager position  |
+|           303 |   101 |         203 | 2024-03-01      | This is my cover letter for the software engineer position  |
+|           304 |   104 |         204 | 2024-03-04      | This is my cover letter for the web developer position      |
+|           305 |   102 |         203 | 2024-03-07      | This is my cover letter for the marketing engineer position |
++---------------+-------+-------------+-----------------+-------------------------------------------------------------+
+
+3. Define appropriate primary keys, foreign keys, and constraints.
+A. primary keys: companyID, jobID, ApplicantID, ApplicationID
+   foreign keys: companyID, jobID,ApplicantID
+
+
+
+4. Ensure the script handles potential errors, such as if the database or tables already exist.
+A. create database CareerHub;
+ERROR 1007 (HY000): Can't create database 'careerhub'; database exists
+ create table Jobs(jobID int);
+ERROR 1050 (42S01): Table 'jobs' already exists
+create table Companies(CompanyID int);
+ERROR 1050 (42S01): Table 'Companies' already exists
+
+5. Write an SQL query to count the number of applications received for each job listing in the "Jobs" table. Display the job title and the corresponding application count. Ensure that it lists all jobs, even if they have no applications.
+A. Select j.JobTitle, COUNT(a.ApplicationID) AS ApplicationCount from Jobs j left join Applications a ON j.JobID = a.JobID
+group by j.JobID, j.JobTitle;
+
++-------------------+------------------+
+| JobTitle          | ApplicationCount |
++-------------------+------------------+
+| Software Engineer |                2 |
+| Marketing Manager |                1 |
+| Data Analyst      |                0 |
+| Web Developer     |                1 |
++-------------------+------------------+
+
+6. Develop an SQL query that retrieves job listings from the "Jobs" table within a specified salary
+range. Allow parameters for the minimum and maximum salary values. Display the job title,
+company name, location, and salary for each matching job.
+
+A. select j.JobTitle,c.CompanyName,j.JobLocation ,j.salary from Jobs j join Companies c on j.CompanyID=c.CompanyID 
+where j.Salary between 42000 and 70000;
+
++-------------------+-------------+-------------+----------+
+| JobTitle          | CompanyName | JobLocation | salary   |
++-------------------+-------------+-------------+----------+
+| Marketing Manager | Hexaware    | Chennai     | 60000.00 |
+| Data Analyst      | CoMakeIt    | Los Angeles | 70000.00 |
++-------------------+-------------+-------------+----------+
+
+7. Write an SQL query that retrieves the job application history for a specific applicant. Allow a parameter for the ApplicantID, and return a result set with the job titles, company names, and application dates for all the jobs the applicant has applied to.
+A. select j.JobTitle, c.CompanyName, a.ApplicationDate
+from Applications a
+join Jobs j ON a.JobID = j.JobID
+join Companies c ON j.CompanyID = c.CompanyID
+where a.ApplicantID = 203;
+
+
++-------------------+-------------+-----------------+
+| JobTitle          | CompanyName | ApplicationDate |
++-------------------+-------------+-----------------+
+| Software Engineer | Hexaware    | 2024-03-01      |
+| Marketing Manager | Hexaware    | 2024-03-07      |
++-------------------+-------------+-----------------+
+
+8. Create an SQL query that calculates and displays the average salary offered by all companies for
+job listings in the "Jobs" table. Ensure that the query filters out jobs with a salary of zero.
+
+A. select c.CompanyName,Avg(j.salary) as Average_Salary from jobs j join Companies c on j.CompanyID=c.CompanyID where j.salary>0
+Group by c.CompanyName;
++----------------+----------------+
+| CompanyName    | Average_salary |
++----------------+----------------+
+| Hexaware       |   67500.000000 |
+| CoMakeIt       |   70000.000000 |
+| Tech Solutions |   80000.000000 |
++----------------+----------------+
+
+9. Write an SQL query to identify the company that has posted the most job listings. Display the
+company name along with the count of job listings they have posted. Handle ties if multiple
+companies have the same maximum count.
+
+A. select CompanyName,count(JobID) as JobCount from Jobs j join companies c on j.CompanyID=c.CompanyID group by  c.CompanyName order by JobCount desc limit 1;
+
+-------------+----------+
+| CompanyName | JobCount |
++-------------+----------+
+| Hexaware    |        2 |
++-------------+----------+
+
+10. Find the applicants who have applied for positions in companies located in 'CityX' and have at
+least 3 years of experience.
+A. select distinct ap.ApplicantID,ap.FirstName as ApplicantName from Applicants ap join Applications a on ap.ApplicantID=a.ApplicantID join jobs j on  a.JobID=j.JObID join companies c on j.CompanyID=c.CompanyID where c.location="Chennai" AND ap.Experience>=3;
+
++-------------+---------------+
+| ApplicantID | ApplicantName |
++-------------+---------------+
+|         201 | John          |
+|         203 | Michael       |
++-------------+---------------+
+
+11. Retrieve a list of distinct job titles with salaries between $60,000 and $80,000.
+A. select Distinct JobTitle from Jobs where salary between 60000 and 80000;
+
+-------------------+
+| JobTitle          |
++-------------------+
+| Software Engineer |
+| Marketing Manager |
+| Data Analyst      |
+| Web Developer     |
++-------------------+
+
+12. Find the jobs that have not received any applications.
+A. select * from Jobs j left join Applications a on j.JobID=a.JobID where a.ApplicationID is null;
+
++-------+-----------+--------------+---------------------------------------+-------------+----------+-----------+---------------------+---------------+-------+-------------+-----------------+-------------+
+| JobID | CompanyID | JobTitle     | JobDescription                        | JobLocation | Salary   | JobType   | PostedDate          | ApplicationID | JobID | ApplicantID | ApplicationDate | CoverLetter |
++-------+-----------+--------------+---------------------------------------+-------------+----------+-----------+---------------------+---------------+-------+-------------+-----------------+-------------+
+|   103 |         2 | Data Analyst | Analyzing data and generating reports | Los Angeles | 70000.00 | Part-time | 2024-03-01 10:00:00 |          NULL |  NULL |        NULL | NULL            | NULL        |
++-------+-----------+--------------+---------------------------------------+-------------+----------+-----------+---------------------+---------------+-------+-------------+-----------------+-------------+
+
+13. Retrieve a list of job applicants along with the companies they have applied to and the positions
+they have applied for.
+
+Select a.FirstName,a.LastName,c.CompanyName,j.JoTitle from Applicants a join Applications ap on a.ApplicantID=ap.ApplicantID join Jobs j on ap.JobID=j.JobID join Companies c on j.CompanyID=c.CompanyID;
+
+-----------+----------+----------------+-------------------+
+| FirstName | LastName | CompanyName    | JobTitle          |
++-----------+----------+----------------+-------------------+
+| John      | Doe      | Hexaware       | Software Engineer |
+| Jane      | Smith    | Hexaware       | Marketing Manager |
+| Michael   | Johnson  | Hexaware       | Software Engineer |
+| Michael   | Johnson  | Hexaware       | Marketing Manager |
+| Emily     | Williams | Tech Solutions | Web Developer     |
++-----------+----------+----------------+-------------------+
+
+14. Retrieve a list of companies along with the count of jobs they have posted, even if they have not
+received any applications.
+
+A)select c.CompanyName,count(j.JobID) as job_count from Companies c Left Join Jobs j on c.CompanyId=j.CompanyID
+Group by c.CompanyName;
+--------------------+-----------+
+| CompanyName        | job_count |
++--------------------+-----------+
+| Hexaware           |         2 |
+| CoMakeIt           |         1 |
+| Tech Solutions     |         1 |
+| Global Innovations |         0 |
++--------------------+-----------+
+
+
+15. List all applicants along with the companies and positions they have applied for, including those
+who have not applied.
+
+A. Select a.FirstName,a.LastName,Coalesce(c.CompanyName,'Not Applied') As CompanyName ,Coalesce(j.JobTitle,'Not Applied') As JobTitle from Applicants a join left join applications ap on a.ApplicantId=ap.ApplicantID Left join jobs j on ap.JobID=j.JobID left join companies c on j.CompanyID=c.CompanyID;
+
+-----------+----------+----------------+-------------------+
+| FirstName | LastName | CompanyName    | JobTitle          |
++-----------+----------+----------------+-------------------+
+| John      | Doe      | Hexaware       | Software Engineer |
+| Jane      | Smith    | Hexaware       | Marketing Manager |
+| Michael   | Johnson  | Hexaware       | Software Engineer |
+| Michael   | Johnson  | Hexaware       | Marketing Manager |
+| Emily     | Williams | Tech Solutions | Web Developer     |
++-----------+----------+----------------+-------------------+
+
+16. Find companies that have posted jobs with a salary higher than the average salary of all jobs.
+A. Select c.CompanyName from Companies c join Jobs j on c.CompanyId=j.CompanyID where j.salary>(Select avg(salary) from Jobs);
+----------------+
+| CompanyName    |
++----------------+
+| Hexaware       |
+| Tech Solutions |
++----------------+
+
+17. Display a list of applicants with their names and a concatenated string of their city and state.
+A. select concat(FirstName,'',LastName) as ApplicantName,concat(City,', ',State) as Location from Applicants;
+
++----------------+---------------------------+
+| ApplicantName  | Location                  |
++----------------+---------------------------+
+| JohnDoe        | Miyapur, Telengana        |
+| JaneSmith      | Vijayawada, Andhrapradesh |
+| MichaelJohnson | Noida, Uttarpradesh       |
+| EmilyWilliams  | Kodad, Telengana          |
++----------------+---------------------------+
+
+
+
+18. Retrieve a list of jobs with titles containing either 'Developer' or 'Engineer'.
+
+A. select * from Jobs where JobTitle='Developer' or JobTitle='Software Engineer';
+
+-------+-----------+-------------------+----------------------------------+-------------+----------+-----------+---------------------+
+| JobID | CompanyID | JobTitle          | JobDescription                   | JobLocation | Salary   | JobType   | PostedDate          |
++-------+-----------+-------------------+----------------------------------+-------------+----------+-----------+---------------------+
+|   101 |         1 | Software Engineer | Developing software applications | Chennai     | 75000.00 | Full-time | 2024-03-03 08:00:00 |
++-------+-----------+-------------------+----------------------------------+-------------+----------+-----------+---------------------+
+
+19. Retrieve a list of applicants and the jobs they have applied for, including those who have not
+applied and jobs without applicants.
+
+A.select a.*, j.JobTitle, j.JobID
+from Applicants a
+left join Applications ap on a.ApplicantID = ap.ApplicantID
+left join Jobs j on j.JobID = ap.JobID;
+
+-------------+-----------+----------+-------------------------+------------+--------------------+-------------------+-------+
+| ApplicantID | FirstName | LastName | Email                   | Phone      | Resume             | JobTitle          | JobID |
++-------------+-----------+----------+-------------------------+------------+--------------------+-------------------+-------+
+|         201 | John      | Doe      | john23@gmail.com        | 9391058224 | Sample resume text | Software Engineer |   101 |
+|         202 | Jane      | Smith    | jane33@gmail.com        | 8121411037 | Sample resume text | Marketing Manager |   102 |
+|         203 | Michael   | Johnson  | michael78@gmail.com.com | 9182191569 | Sample resume text | Software Engineer |   101 |
+|         203 | Michael   | Johnson  | michael78@gmail.com.com | 9182191569 | Sample resume text | Marketing Manager |   102 |
+|         204 | Emily     | Williams | emily34@gmail.com       | 9182345113 | Sample resume text | Web Developer     |   104 |
++-------------+-----------+----------+-------------------------+------------+--------------------+-------------------+-------+
+
+
+20)List all combinations of applicants and companies where the company is in a specific city and the
+applicant has more than 2 years of experience. For example: city=Chennai
+A)select a.FirstName , a.LastName,j.jobTitle,c.CompanyName,c.Location as CompanyLocation from Applicants a join applications  ap on a.ApplicantID=ap.ApplicantID join jobs j on ap.JobID=j.JobID join companies c on j.CompanyID=c.CompanyID where c.location='Chennai' And a.Experience>2;
+
++-----------+----------+-------------------+-------------+-----------------+
+| FirstName | LastName | jobTitle          | CompanyName | CompanyLocation |
++-----------+----------+-------------------+-------------+-----------------+
+| John      | Doe      | Software Engineer | Hexaware    | Chennai         |
+| Michael   | Johnson  | Software Engineer | Hexaware    | Chennai         |
+| Michael   | Johnson  | Marketing Manager | Hexaware    | Chennai         |
++-----------+----------+-------------------+-------------+-----------------+
+
+
+
